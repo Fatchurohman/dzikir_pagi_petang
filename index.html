@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Dzikir Pagi & Petang - Glorious Emerald Edition</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cinzel:wght@500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome & Animate.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    
+    <style>
+        :root {
+            --emerald-deep: #031e13;
+            --emerald-main: #072e1e;
+            --emerald-light: #0d422d;
+            --gold-light: #fbe38e;
+            --gold-main: #d4af37;
+            --gold-dark: #aa7c11;
+            --gold-gradient: linear-gradient(135deg, #bf953f 0%, #fcf6ba 25%, #b38728 50%, #fbf5b7 75%, #aa771c 100%);
+            --text-light: #f5f8f6;
+            --text-muted: #a3c2b5;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: #010d08;
+            color: var(--text-light);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-image: 
+                radial-gradient(circle at 50% 0%, #0d422d 0%, transparent 70%),
+                radial-gradient(circle at 50% 100%, #031e13 0%, transparent 70%);
+            overflow-x: hidden;
+        }
+
+        /* App Container */
+        .app-container {
+            width: 100%;
+            max-width: 480px;
+            height: 100vh;
+            max-height: 920px;
+            background: var(--emerald-main);
+            position: relative;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+            display: flex;
+            flex-direction: column;
+            border-left: 1px solid rgba(212, 175, 55, 0.2);
+            border-right: 1px solid rgba(212, 175, 55, 0.2);
+            overflow: hidden;
+        }
+
+        @media (min-width: 481px) {
+            .app-container {
+                height: 95vh;
+                border-radius: 28px;
+                border: 2px solid var(--gold-main);
+            }
+        }
+
+        /* Shimmer Banner */
+        .shimmer-bar {
+            height: 4px;
+            width: 100%;
+            background: var(--gold-gradient);
+            background-size: 200% 100%;
+            animation: shimmer 3s infinite linear;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* Header */
+        header {
+            padding: 18px 20px 14px 20px;
+            text-align: center;
+            background: linear-gradient(180deg, rgba(3, 30, 19, 0.9) 0%, rgba(7, 46, 30, 0.6) 100%);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.25);
+            position: relative;
+            z-index: 10;
+        }
+
+        .header-title {
+            font-family: 'Cinzel', serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 2px;
+        }
+
+        .header-subtitle {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+
+        /* Toggle Mode Switcher (Pagi / Petang) */
+        .mode-switcher-container {
+            padding: 12px 20px;
+            background: rgba(3, 30, 19, 0.8);
+            display: flex;
+            justify-content: center;
+        }
+
+        .mode-switcher {
+            display: flex;
+            width: 100%;
+            background: rgba(1, 13, 8, 0.6);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 30px;
+            padding: 4px;
+            position: relative;
+        }
+
+        .mode-btn {
+            flex: 1;
+            padding: 8px 16px;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            z-index: 2;
+        }
+
+        .mode-btn.active {
+            color: var(--emerald-deep);
+            background: var(--gold-gradient);
+            font-weight: 700;
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+        }
+
+        /* Content Area */
+        .dzikir-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            scroll-behavior: smooth;
+        }
+
+        .dzikir-content::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .dzikir-content::-webkit-scrollbar-track {
+            background: rgba(3, 30, 19, 0.5);
+        }
+
+        .dzikir-content::-webkit-scrollbar-thumb {
+            background: var(--gold-dark);
+            border-radius: 10px;
+        }
+
+        /* Card Dzikir */
+        .dzikir-card {
+            background: linear-gradient(145deg, rgba(13, 66, 45, 0.6) 0%, rgba(3, 30, 19, 0.8) 100%);
+            border: 1px solid rgba(212, 175, 55, 0.25);
+            border-radius: 18px;
+            padding: 22px 18px;
+            margin-bottom: 20px;
+            position: relative;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+        }
+
+        .dzikir-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            border-radius: 18px;
+            border: 1px solid transparent;
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.2), transparent) border-box;
+            -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: destination-out;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            border-bottom: 1px dashed rgba(212, 175, 55, 0.2);
+            padding-bottom: 10px;
+        }
+
+        .dzikir-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--gold-light);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .dzikir-title i {
+            color: var(--gold-main);
+        }
+
+        .repeat-badge {
+            font-size: 0.72rem;
+            background: rgba(212, 175, 55, 0.15);
+            color: var(--gold-light);
+            padding: 3px 10px;
+            border-radius: 12px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            font-weight: 600;
+        }
+
+        /* Arabic Text */
+        .arabic-text {
+            font-family: 'Amiri', serif;
+            font-size: 1.65rem;
+            line-height: 2.3;
+            text-align: right;
+            color: #ffffff;
+            margin-bottom: 16px;
+            direction: rtl;
+            word-spacing: 2px;
+        }
+
+        /* Latin & Translation */
+        .latin-text {
+            font-size: 0.85rem;
+            color: var(--gold-light);
+            font-style: italic;
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+
+        .translation-text {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+            margin-bottom: 14px;
+        }
+
+        .benefit-box {
+            background: rgba(1, 13, 8, 0.5);
+            border-left: 3px solid var(--gold-main);
+            padding: 8px 12px;
+            border-radius: 0 8px 8px 0;
+            font-size: 0.75rem;
+            color: #d0e3db;
+            margin-bottom: 16px;
+        }
+
+        .benefit-box strong {
+            color: var(--gold-light);
+        }
+
+        /* Interactive Counter Area */
+        .counter-section {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(1, 13, 8, 0.6);
+            border-radius: 12px;
+            padding: 8px 14px;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .counter-status {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .counter-status span {
+            color: var(--gold-light);
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .counter-btn {
+            background: var(--gold-gradient);
+            border: none;
+            color: var(--emerald-deep);
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+            box-shadow: 0 3px 10px rgba(212, 175, 55, 0.2);
+        }
+
+        .counter-btn:active {
+            transform: scale(0.95);
+        }
+
+        .counter-btn.completed {
+            background: #1e5239;
+            color: var(--gold-light);
+            border: 1px solid var(--gold-dark);
+            box-shadow: none;
+        }
+
+        /* Progress Footer */
+        footer {
+            padding: 12px 20px;
+            background: rgba(3, 30, 19, 0.95);
+            border-top: 1px solid rgba(212, 175, 55, 0.25);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .progress-info {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .progress-info strong {
+            color: var(--gold-light);
+        }
+
+        .reset-all-btn {
+            background: transparent;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            color: var(--gold-light);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .reset-all-btn:hover {
+            background: rgba(212, 175, 55, 0.1);
+        }
+
+        /* Hide elements according to mode */
+        .pagi-only, .petang-only {
+            transition: all 0.3s ease;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <!-- Top Shimmer Line -->
+        <div class="shimmer-bar"></div>
+
+        <!-- App Header -->
+        <header>
+            <div class="header-title">Dzikir Pagi & Petang</div>
+            <div class="header-subtitle">Glorious Emerald Edition • Shahih Sunnah</div>
+        </header>
+
+        <!-- Mode Switcher -->
+        <div class="mode-switcher-container">
+            <div class="mode-switcher">
+                <button class="mode-btn active" id="btnPagi" onclick="switchMode('pagi')">
+                    <i class="fa-solid font-awesome fa-sun"></i> Dzikir Pagi
+                </button>
+                <button class="mode-btn" id="btnPetang" onclick="switchMode('petang')">
+                    <i class="fa-solid font-awesome fa-moon"></i> Dzikir Petang
+                </button>
+            </div>
+        </div>
+
+        <!-- Dzikir List Area -->
+        <div class="dzikir-content" id="dzikirList">
+            
+            <!-- 1. Ayat Kursi -->
+            <div class="dzikir-card animate__animated animate__fadeIn">
+                <div class="card-header">
+                    <div class="dzikir-title">
+                        <i class="fa-solid fa-bookmark"></i> Ayat Kursi (QS. Al-Baqarah: 255)
+                    </div>
+                    <div class="repeat-badge">Dibaca 1x</div>
+                </div>
+                <div class="arabic-text">
+                    اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ ۚ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ ۚ لَهُ مَا فِي السَّمَاوَاتِ وَمَا فِي الْأَرْضِ ۗ مَنْ ذَا الَّذِي يَشْفَعُ عِنْدَهُ إِلَّا بِإِذْنِهِ ۚ يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ وَمَا خَلْفَهُمْ ۖ وَلَا يُحِيطُونَ بِشَيْءٍ مِنْ عِلْمِهِ إِلَّا بِمَا شَاءَ ۚ وَسِعَ كُرْسِيُّهُ السَّمَاوَاتِ وَالْأَرْضَ ۖ وَلَا يَئُودُهُ حِفْظُهُمَا ۚ وَهُوَ الْعَلِيُّ الْعَظِيمُ
+                </div>
+                <div class="latin-text">
+                    "Allahu laa ilaaha illaa huwal-hayyul-qayyum, laa ta'khuzuhu sinatuw-wa laa naum..."
+                </div>
+                <div class="translation-text">
+                    Allah, tidak ada tuhan selain Dia Yang Mahahidup, Yang terus-menerus mengurus (makhluk-Nya). Tidak mengantuk dan tidak tidur...
+                </div>
+                <div class="benefit-box">
+                    <strong>Keutamaan:</strong> Siapa membacanya di pagi hari akan dilindungi dari jin hingga petang, dan siapa membacanya di petang hari dilindungi hingga pagi. (HR. An-Nasa'i, Shahih)
+                </div>
+                <div class="counter-section">
+                    <div class="counter-status">Progres: <span id="count-1">0</span> / 1</div>
+                    <button class="counter-btn" id="btn-1" onclick="countTap(1, 1)">
+                        <i class="fa-solid fa-fingerprint"></i> Hitung
+                    </button>
+                </div>
+            </div>
+
+            <!-- 2. Al-Ikhlas, Al-Falaq, An-Nas -->
+            <div class="dzikir-card animate__animated animate__fadeIn">
+                <div class="card-header">
+                    <div class="dzikir-title">
+                        <i class="fa-solid fa-shield-halved"></i> Surat Al-Ikhlas, Al-Falaq, An-Nas
+                    </div>
+                    <div class="repeat-badge">Dibaca 3x</div>
+                </div>
+                <div class="arabic-text">
+                    قُلْ هُوَ اللَّهُ أَحَدٌ ... <br>
+                    قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ ... <br>
+                    قُلْ أَعُوذُ بِرَبِّ النَّاسِ ...
+                </div>
+                <div class="translation-text">
+                    Membaca Surah Al-Ikhlas, Al-Falaq, dan An-Nas masing-masing sebanyak 3 kali.
+                </div>
+                <div class="benefit-box">
+                    <strong>Keutamaan:</strong> Membaca 3x saat pagi dan petang akan mencukupkanmu dari segala sesuatu (perlindungan mutlak). (HR. Abu Dawud & Tirmidzi, Shahih)
+                </div>
+                <div class="counter-section">
+                    <div class="counter-status">Progres: <span id="count-2">0</span> / 3</div>
+                    <button class="counter-btn" id="btn-2" onclick="countTap(2, 3)">
+                        <i class="fa-solid fa-fingerprint"></i> Hitung
+                    </button>
+                </div>
+            </div>
+
+            <!-- 3. Sayyidul Istighfar -->
+            <div class="dzikir-card animate__animated animate__fadeIn">
+                <div class="card-header">
+                    <div class="dzikir-title">
+                        <i class="fa-solid fa-crown"></i> Sayyidul Istighfar
+                    </div>
+                    <div class="repeat-badge">Dibaca 1x</div>
+                </div>
+                <div class="arabic-text">
+                    اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَٰهَ إِلَّا أَنْتَ، خَلَقْتَنِي وَأَنَا عَبْدُكَ، وَأَنَا عَلَىٰ عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ، أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ، أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ، وَأَبُوءُ بِذَنْبِي فَاغْفِرْ لِي فَإِنَّهُ لَا يَغْفِرُ الذُّنُوبَ إِلَّا أَنْتَ
+                </div>
+                <div class="latin-text">
+                    "Allahumma anta rabbii laa ilaaha illaa anta, khalaqtanii wa anaa 'abduka..."
+                </div>
+                <div class="translation-text">
+                    Ya Allah, Engkau adalah Rabbku, tidak ada tuhan selain Engkau. Engkau yang mencipatakanku dan aku adalah hamba-Mu...
+                </div>
+                <div class="benefit-box">
+                    <strong>Keutamaan:</strong> Barangsiapa membacanya di siang/malam hari dengan yakin lalu meninggal, maka ia termasuk penghuni surga. (HR. Bukhari)
+                </div>
+                <div class="counter-section">
+                    <div class="counter-status">Progres: <span id="count-3">0</span> / 1</div>
+                    <button class="counter-btn" id="btn-3" onclick="countTap(3, 1)">
+                        <i class="fa-solid fa-fingerprint"></i> Hitung
+                    </button>
+                </div>
+            </div>
+
+            <!-- 4. Doa Keselamatan & Afiyah -->
+            <div class="dzikir-card animate__animated animate__fadeIn">
+                <div class="card-header">
+                    <div class="dzikir-title">
+                        <i class="fa-solid fa-heart-pulse"></i> Doa Memohon Afiyah & Perlindungan
+                    </div>
+                    <div class="repeat-badge">Dibaca 3x</div>
+                </div>
+                <div class="arabic-text">
+                    اللَّهُمَّ عَافِنِي فِي بَدَنِي، اللَّهُمَّ عَافِنِي فِي سَمْعِي، اللَّهُمَّ عَافِنِي فِي بَصَرِي، لَا إِلَٰهَ إِلَّا أَنْتَ
+                </div>
+                <div class="latin-text">
+                    "Allahumma 'aafinii fii badanii, allahumma 'aafinii fii sam'ii, allahumma 'aafinii fii basharii, laa ilaaha illaa anta"
+                </div>
+                <div class="translation-text">
+                    Ya Allah, selamatkanlah tubuhku, selamatkanlah pendengaranku, selamatkanlah penglihatanku, tidak ada tuhan selain Engkau.
+                </div>
+                <div class="benefit-box">
+                    <strong>Keutamaan:</strong> Memohon kesehatan tubuh, pendengaran, penglihatan, serta perlindungan dari kekufuran dan siksa kubur. (HR. Abu Dawud, Hasan)
+                </div>
+                <div class="counter-section">
+                    <div class="counter-status">Progres: <span id="count-4">0</span> / 3</div>
+                    <button class="counter-btn" id="btn-4" onclick="countTap(4, 3)">
+                        <i class="fa-solid fa-fingerprint"></i> Hitung
+                    </button>
+                </div>
+            </div>
+
+            <!-- 5. Perlindungan Dari Bahaya (Bismillahillazi) -->
+            <div class="dzikir-card animate__animated animate__fadeIn">
+                <div class="card-header">
+                    <div class="dzikir-title">
+                        <i class="fa-solid fa-hand-holding-hand"></i> Perlindungan Dari Marabahaya
+                    </div>
+                    <div class="repeat-badge">Dibaca 3x</div>
+                </div>
+                <div class="arabic-text">
+                    بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ
+                </div>
+                <div class="latin-text">
+                    "Bismillahillazii laa yadhurru ma'asmihi syai'un fil-ardhi wa laa fis-samaa'i wa huwas-samii'ul-'aliim"
+                </div>
+                <div class="translation-text">
+                    Dengan nama Allah yang bersama nama-Nya tidak ada sesuatupun di bumi maupun di langit yang dapat membahayakan...
+                </div>
+                <div class="benefit-box">
+                    <strong>Keutamaan:</strong> Barangsiapa membacanya 3x di pagi dan petang hari, tidak ada sesuatupun yang dapat membahayakannya. (HR. Tirmidzi, Shahih)
+                </div>
+                <div class="counter-section">
+                    <div class="counter-status">Progres: <span id="count-5">0</span> / 3</div>
+                    <button class="counter-btn" id="btn-5" onclick="countTap(5, 3)">
+                        <i class="fa-solid fa-fingerprint"></i> Hitung
+                    </button>
+                </div>
+            </div>
+
+            <!-- 6. Doa Keridhaan (Radhitu Billahi) -->
+            <div class="dzikir-card animate__animated animate__fadeIn">
+                <div class="card-header">
+                    <div class="dzikir-title">
+                        <i class="fa-solid fa-star"></i> Ridha Allah & Islam
+                    </div>
+                    <div class="repeat-badge">Dibaca 3x</div>
+                </div>
+                <div class="arabic-text">
+                    رَضِيتُ بِاللَّهِ رَبًّا، وَبِالْإِسْلَامِ دِينًا، وَبِمُحَمَّدٍ صَلَّى اللَّهُ عَلَيْهِ وَسَلَّمَ نَبِيًّا
+                </div>
+                <div class="latin-text">
+                    "Radhiitu billahi rabbaa, wa bil-islaami diinaa, wa bi-muhammadin shallallahu 'alaihi wa sallama nabiyyaa"
+                </div>
+                <div class="translation-text">
+                    Aku ridha Allah sebagai Rabbku, Islam sebagai agamaku, dan Nabi Muhammad SAW sebagai nabiku.
+                </div>
+                <div class="benefit-box">
+                    <strong>Keutamaan:</strong> Barangsiapa membacanya 3x saat pagi dan petang, Allah berjanji akan meridhainya pada hari kiamat. (HR. Ahmad, Shahih)
+                </div>
+                <div class="counter-section">
+                    <div class="counter-status">Progres: <span id="count-6">0</span> / 3</div>
+                    <button class="counter-btn" id="btn-6" onclick="countTap(6, 3)">
+                        <i class="fa-solid fa-fingerprint"></i> Hitung
+                    </button>
+                </div>
+            </div>
+
+            <!-- 7. Tasbih 100x -->
+            <div class="dzikir-card animate__animated animate__fadeIn">
+                <div class="card-header">
+                    <div class="dzikir-title">
+                        <i class="fa-solid fa-gem"></i> Tasbih Utama (Subhanallah)
+                    </div>
+                    <div class="repeat-badge">Dibaca 100x</div>
+                </div>
+                <div class="arabic-text">
+                    سُبْحَانَ اللَّهِ وَبِحَمْدِهِ
+                </div>
+                <div class="latin-text">
+                    "Subhaanallahi wa bihamdihi"
+                </div>
+                <div class="translation-text">
+                    Maha Suci Allah dan dengan memuji-Nya.
+                </div>
+                <div class="benefit-box">
+                    <strong>Keutamaan:</strong> Barangsiapa membacanya 100x dalam sehari, dosa-dosanya diampuni walaupun sebanyak buih di lautan. (HR. Bukhari & Muslim)
+                </div>
+                <div class="counter-section">
+                    <div class="counter-status">Progres: <span id="count-7">0</span> / 100</div>
+                    <button class="counter-btn" id="btn-7" onclick="countTap(7, 100)">
+                        <i class="fa-solid fa-fingerprint"></i> Hitung
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Footer / Reset -->
+        <footer>
+            <div class="progress-info">
+                Selesai: <strong id
